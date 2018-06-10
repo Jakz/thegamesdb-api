@@ -16,6 +16,7 @@ import com.github.jakz.gamesdbapi.requests.RequestException;
 import com.github.jakz.gamesdbapi.requests.RequestFactory;
 import com.github.jakz.gamesdbapi.types.Game;
 import com.github.jakz.gamesdbapi.types.GameList;
+import com.github.jakz.gamesdbapi.types.Images;
 import com.github.jakz.gamesdbapi.types.Platform;
 
 import jdk.incubator.http.HttpClient;
@@ -30,11 +31,11 @@ public class Main
       /*List<Game> games = RequestFactory.getGameList("quake");
       games.forEach(e -> System.out.println(e));*/
       
-      //Game game = RequestFactory.getGameByID(123);
-      // System.out.println(game);
+      Images images = RequestFactory.getArt(123);
+      System.out.println(images);
       
-      List<Platform> platforms = RequestFactory.getPlatformList();
-      System.out.println(platforms);
+      //List<Platform> platforms = RequestFactory.getPlatformList();
+      //System.out.println(platforms);
     } 
     catch (RequestException e) 
     {
