@@ -39,7 +39,7 @@ public class RequestFactory
   {
     try 
     {
-      System.out.println("[REQUEST] " + uri);
+      System.out.println("Request: " + uri);
       
       HttpRequest request = HttpRequest.newBuilder()
           .uri(new URI(uri))
@@ -52,8 +52,12 @@ public class RequestFactory
       if (response.statusCode() != 200)
         throw new RequestException("Bad HTTP status code: ", response.statusCode());
       
+      System.out.println("Response: \n" + response.body());
+      
       JAXBContext jaxbContext = JAXBContext.newInstance(type);
       Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+      
+      @SuppressWarnings("unchecked")
       T t = (T) unmarshaller.unmarshal(new StreamSource(new StringReader(response.body())));
       
       return t;
