@@ -1,6 +1,7 @@
 package com.github.jakz.gamesdbapi.requests;
 
 import java.io.IOException;
+
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,10 +14,25 @@ import javax.xml.transform.stream.StreamSource;
 
 import com.github.jakz.gamesdbapi.types.Game;
 import com.github.jakz.gamesdbapi.types.GameList;
+import com.github.jakz.gamesdbapi.types.Platform;
+import com.github.jakz.gamesdbapi.types.PlatformList;
 
 import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpRequest;
 import jdk.incubator.http.HttpResponse;
+
+/*
+GetGamesList +
+GetGame
+GetArt
+GetPlatformsList +
+GetPlatform
+GetPlatformGames
+PlatformGames
+Updates
+UserRating
+UserFavorites
+ */
 
 public class RequestFactory
 {
@@ -106,4 +122,10 @@ public class RequestFactory
   
   public static Game getGameByID(int id, String platform) throws RequestException { return getGame("id", Integer.toString(id), platform).get(0); }
   public static Game getGameByID(int id) throws RequestException { return getGame("id", Integer.toString(id), null).get(0); }
+  
+  public static List<Platform> getPlatformList() throws RequestException
+  {
+    String uri = "http://thegamesdb.net/api/GetPlatformsList.php";
+    return handleRequest(uri, PlatformList.class).platforms;
+  }
 }
