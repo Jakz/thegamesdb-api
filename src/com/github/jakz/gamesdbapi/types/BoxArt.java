@@ -13,4 +13,6 @@ public class BoxArt
   @XmlAttribute private int height;
   @XmlAttribute private String thumb;
   @XmlValue private String url;
+  
+  public String url() { return url; }
 }

@@ -1,5 +1,6 @@
 package com.github.jakz.gamesdbapi;
 
+import java.awt.Dimension;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -7,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -18,6 +20,7 @@ import com.github.jakz.gamesdbapi.types.Game;
 import com.github.jakz.gamesdbapi.types.GameList;
 import com.github.jakz.gamesdbapi.types.Images;
 import com.github.jakz.gamesdbapi.types.Platform;
+import com.github.jakz.gamesdbapi.ui.ArtDownloaderPanel;
 
 import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpRequest;
@@ -25,8 +28,37 @@ import jdk.incubator.http.HttpResponse;
 
 public class Main
 {
+  public static void test()
+  { 
+    try
+    {
+      JFrame frame = new JFrame();
+      ArtDownloaderPanel artPanel = new ArtDownloaderPanel();
+      artPanel.setPreferredSize(new Dimension(600,600));
+
+      frame.add(artPanel);
+      frame.pack();
+      frame.setLocationRelativeTo(null);
+      frame.setVisible(true);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      Images images = RequestFactory.getArt(123);
+      artPanel.onResponse(images);
+      
+    } 
+    catch (RequestException e)
+    {
+      e.printStackTrace();
+    }
+
+  }
+  
   public static void main(String[] args)
   {
+    test();
+    if (true)
+      return;
+    
     try {
       /*List<Game> games = RequestFactory.getGameList("quake");
       games.forEach(e -> System.out.println(e));*/

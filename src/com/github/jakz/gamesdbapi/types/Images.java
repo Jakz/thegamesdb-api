@@ -14,4 +14,6 @@ public class Images
   
   @XmlElement(name="fanarts")
   List<Image> fanart;
+  
+  public List<BoxArt> boxarts() { return boxarts; }
 }
