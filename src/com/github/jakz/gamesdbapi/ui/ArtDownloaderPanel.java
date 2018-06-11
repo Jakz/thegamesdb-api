@@ -13,6 +13,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -27,6 +29,7 @@ import org.imgscalr.Scalr.Method;
 
 import com.github.jakz.gamesdbapi.requests.RequestFactory;
 import com.github.jakz.gamesdbapi.types.BoxArt;
+import com.github.jakz.gamesdbapi.types.Downloadable;
 import com.github.jakz.gamesdbapi.types.Images;
 
 public class ArtDownloaderPanel extends JPanel
@@ -36,6 +39,7 @@ public class ArtDownloaderPanel extends JPanel
   public ArtDownloaderPanel()
   {
     imagesPanel = new JPanel();
+    imagesPanel.setLayout(new WrapLayout());
     this.add(imagesPanel);
   }
   
@@ -53,7 +57,7 @@ public class ArtDownloaderPanel extends JPanel
       //TODO: obtain from XML result
       String base = "http://thegamesdb.net/banners/";
       
-      Function<BoxArt, ArtworkHolder> downloadTask = boxArt -> {
+      Function<Downloadable, ArtworkHolder> downloadTask = boxArt -> {
         try
         {
           URL url = new URL(base + boxArt.url());
@@ -86,8 +90,10 @@ public class ArtDownloaderPanel extends JPanel
           SwingUtilities.invokeLater(() -> imagesPanel.revalidate());
         }             
       };
+
+      Stream<Downloadable> downloadables = Stream.concat(boxarts.stream(), images.screenshots().stream());
       
-      List<CompletableFuture<Void>> futures = boxarts.stream()
+      List<CompletableFuture<Void>> futures = downloadables
         .map(boxArt -> CompletableFuture.supplyAsync(() -> downloadTask.apply(boxArt), executor))
         .map(future -> future.thenApply(resizeTask))
         .map(future -> future.thenAccept(addToPanelTask))

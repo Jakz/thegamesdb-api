@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BoxArt
+public class BoxArt implements Downloadable
 {
   @XmlAttribute private String side; //TODO: to enum
   @XmlAttribute private int width;
@@ -14,8 +14,7 @@ public class BoxArt
   @XmlAttribute private String thumb;
   @XmlValue private String url;
   
-  public String url() { return url; }
-  
+  @Override public String url() { return url; }
   
   public String toString() { return "boxart-" + side; }
 }
