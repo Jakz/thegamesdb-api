@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import org.imgscalr.Scalr;
@@ -52,26 +53,36 @@ public class ArtDownloaderPanel extends JPanel
       //TODO: obtain from XML result
       String base = "http://thegamesdb.net/banners/";
       
-      Function<BoxArt, BufferedImage> downloadTask = boxArt -> {
+      Function<BoxArt, ArtworkHolder> downloadTask = boxArt -> {
         try
         {
           URL url = new URL(base + boxArt.url());
-          return ImageIO.read(url);
+          return new ArtworkHolder(boxArt, ImageIO.read(url));
         }
         catch (IOException e)
         {
           e.printStackTrace();
-          return null;
+          return new ArtworkHolder();
         }
       };
       
-      Function<BufferedImage, BufferedImage> resizeTask = image -> image != null ? Scalr.resize(image, Method.QUALITY, 200) : image;
+      Function<ArtworkHolder, ArtworkHolder> resizeTask = h -> {
+        if (h.image != null)
+          h.thumbnail = Scalr.resize(h.image, Method.QUALITY, 200);      
+        return h;
+      };
       
-      Consumer<BufferedImage> addToPanelTask = image -> {
-        if (image != null)
+      Consumer<ArtworkHolder> addToPanelTask = holder -> {
+        if (holder.image != null)
         {
-          System.out.printf("Adding %dx%d image\n", image.getWidth(), image.getHeight());
-          imagesPanel.add(new JButton(new ImageIcon(image)));
+          System.out.printf("Adding %dx%d image\n", holder.image.getWidth(), holder.image.getHeight());
+          
+          JButton button = new JButton(new ImageIcon(holder.thumbnail));
+          button.setHorizontalTextPosition(SwingConstants.CENTER);
+          button.setVerticalTextPosition(SwingConstants.BOTTOM);
+          button.setText(holder.boxArt+" "+holder.image.getWidth()+"x"+holder.image.getHeight());
+          
+          imagesPanel.add(button);
           SwingUtilities.invokeLater(() -> imagesPanel.revalidate());
         }             
       };

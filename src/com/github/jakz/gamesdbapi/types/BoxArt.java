@@ -15,4 +15,7 @@ public class BoxArt
   @XmlValue private String url;
   
   public String url() { return url; }
+  
+  
+  public String toString() { return "boxart-" + side; }
 }
